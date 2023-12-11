@@ -53,9 +53,9 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   return (
     <View>
       <Font4>The Metropolitan Museum</Font4>
-      { res.length !== 0 && res.map((item:resType, index:Number) => {
+      { res.length !== 0 && res.map((item:resType, index:number) => {
           return (
-            <Image src={item.primaryImage} alt="..." width={100} height={100} />
+            <Image key={index} src={item.primaryImage} alt="..." width={100} height={100} />
           )
         })
       }
