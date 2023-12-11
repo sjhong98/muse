@@ -21,7 +21,7 @@ import { FirstActive } from './modules';
 
 export default function Home(res : InferGetServerSidePropsType<GetServerSideProps>) {
 
-  FirstActive(res);
+  // FirstActive(res);
 
   return (
     <View>
