@@ -15,9 +15,9 @@
 // }
 
 // import axios from 'axios';
-import { View, Font4 } from './styles';
+import { View, Font4 } from '../styles/styles';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { FirstActive } from './modules';
+import { FirstActive } from '../modules/modules';
 
 export default function Home(res : InferGetServerSidePropsType<GetServerSideProps>) {
 
@@ -28,5 +28,6 @@ export default function Home(res : InferGetServerSidePropsType<GetServerSideProp
       <Font4>국립중앙박물관</Font4>
     </View>
   )
+
 }
 
