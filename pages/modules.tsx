@@ -4,7 +4,8 @@ import axios from 'axios';
 import { useEffect } from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export const firstActive = (res : InferGetServerSidePropsType<GetServerSideProps>) => {
+export const FirstActive = (res : InferGetServerSidePropsType<GetServerSideProps>) => {
+
     useEffect(() => {
         axios.post('http://www.museum.go.kr/site/main/openapi/relic?pageSize=10')
         .then((res) => {
@@ -15,4 +16,5 @@ export const firstActive = (res : InferGetServerSidePropsType<GetServerSideProps
         }) 
         // console.log(res)
     }, [])
+
 }

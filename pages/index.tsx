@@ -17,11 +17,11 @@
 import axios from 'axios';
 import { View, Font4 } from './styles';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { firstActive } from './modules';
+import { FirstActive } from './modules';
 
 export default function Home(res : InferGetServerSidePropsType<GetServerSideProps>) {
 
-  firstActive(res);
+  FirstActive(res);
 
   return (
     <View>
