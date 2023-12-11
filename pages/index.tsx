@@ -21,16 +21,12 @@ import { FirstActive } from './modules';
 
 export default function Home(res : InferGetServerSidePropsType<GetServerSideProps>) {
 
-  // FirstActive(res);
-
-  // return (
-  //   <View>
-  //     <Font4>국립중앙박물관</Font4>
-  //   </View>
-  // )
+  FirstActive(res);
 
   return (
-    <div><p>hello</p></div>
+    <View>
+      <Font4>국립중앙박물관</Font4>
+    </View>
   )
 }
 
