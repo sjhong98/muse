@@ -1,31 +1,64 @@
-// export async function getServerSideProps() {
-//   await axios.get('http://www.museum.go.kr/site/main/openapi/relic?pageSize=10')
-//   .then((res) => {
-//     return {
-//       props: res
-//     }
-//   })
+export async function getServerSideProps() {
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=3');
+  const data = response.data.objectIDs;
+  let start: number = 0;
+  let end: number = 10;
+  let item;
+  let res = [];
 
-//   return {
-//     props: "test"
-//   }
+  for(let i=start; i<end; i++) {
+    item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
+    res.push(item.data);
+  }
 
-  
-  
-// }
+  return {
+    props: { res }
+  }
+}
 
-// import axios from 'axios';
+import axios from 'axios';
+import Image from 'next/image';
 import { View, Font4 } from '../styles/styles';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { FirstActive } from '../modules/modules';
 
-export default function Home(res : InferGetServerSidePropsType<GetServerSideProps>) {
+interface resType {
+  medium: string,
+  culture: string,
+  department: string,
+  dimensions: string,
+  objectDate: string,
+  objectName: string,
+  objectURL: string,
+  period: string,
+  primaryImage: string,
+  repository: string,
+  region: string,
+  title: string
+}
+
+interface resType {
+  primaryImage: string
+}
+
+export default function Home(response : InferGetServerSidePropsType<GetServerSideProps>) {
+  const res: resType[] = [];
+  console.log(response);
+  for(let i=0; i<response.res.length; i++) {
+    res.push(response.res[i]);
+  }
 
   FirstActive(res);
 
   return (
     <View>
-      <Font4>국립중앙박물관</Font4>
+      <Font4>The Metropolitan Museum</Font4>
+      { res.length !== 0 && res.map((item:resType, index:Number) => {
+          return (
+            <Image src={item.primaryImage} alt="..." width={100} height={100} />
+          )
+        })
+      }
     </View>
   )
 

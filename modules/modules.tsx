@@ -6,15 +6,24 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 export const FirstActive = (res : InferGetServerSidePropsType<GetServerSideProps>) => {
 
-    useEffect(() => {
-        axios.post('http://www.museum.go.kr/site/main/openapi/relic?pageSize=10')
-        .then((res) => {
-            console.log("res : ", res);
-        })
-        .catch(err => {
-            console.log(err);
-        }) 
-        // console.log(res)
-    }, [])
+    // const func1 = async () => {
+    //     const res = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1');
+    //     const data = res.data.objectIDs;
+    //     let start = 0;
+    //     let end = 10;
+    //     let item;
+    //     let resArr = [];
+
+    //     for(let i=start; i<end; i++) {
+    //         item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
+    //         resArr.push(item.data);
+    //     }
+
+    //     console.log(resArr);
+    // }
+
+    // useEffect(() => {
+    //     func1();
+    // }, [])
 
 }
