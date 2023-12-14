@@ -23,18 +23,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { FirstActive } from '../modules/modules';
 
 interface resType {
-  medium: string,
-  culture: string,
-  department: string,
-  dimensions: string,
-  objectDate: string,
-  objectName: string,
-  objectURL: string,
-  period: string,
   primaryImage: string,
-  repository: string,
-  region: string,
-  title: string
 }
 
 interface resType {
