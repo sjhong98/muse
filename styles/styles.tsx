@@ -14,17 +14,20 @@ export const View = styled.div`
 
 export function Header() {
     const [scrolled, setScrolled] = useState(false);
-    let lastScrollPosition = window.scrollY;
+    let lastScrollPosition: number;
+    if(typeof window !== 'undefined') 
+        lastScrollPosition = window.scrollY;
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        }
+            window.addEventListener('scroll', handleScroll);
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            }
+        
     }, [])
 
     const handleScroll = () => {
-        console.log('last:', lastScrollPosition, " / cur:", window.scrollY);
+        // console.log('last:', lastScrollPosition, " / cur:", window.scrollY);
 
         // 마지막으로 스크롤된 위치와 현재 스크롤 위치를 비교
         if(window.scrollY > lastScrollPosition) // scrolled-up
@@ -36,10 +39,9 @@ export function Header() {
 
     return (
         scrolled ?
-            // <HeaderDisappear>
-            //     <Font4>The Metropolitan Museum</Font4>
-            // </HeaderDisappear>
-            <></>
+            <HeaderDisappear>
+                <Font4>The Metropolitan Museum</Font4>
+            </HeaderDisappear>
             :
             <HeaderAppear>
                 <Font4>The Metropolitan Museum</Font4>
@@ -47,33 +49,9 @@ export function Header() {
     )
 }
 
-const HeaderAppear = styled.div`
-    position: fixed;
-    height: 15vh;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    animation: headerAppearAnim 0.6s ease;
-    animation-fill-mode: forwards;
-`
+// 함수와 변수의 선언만 호이스팅 적용 대상 -> keyframes는 아무것도 아니므로 호이스팅 적용대상 X
 
-const HeaderDisappear = styled.div`
-    position: fixed;
-    height: 15vh;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    animation: headerDisappearAnim 0.6s ease;
-    animation-fill-mode: forwards;
-`
-
-const headerDiappearAnim = keyframes`
+const headerDisappearAnim = keyframes`
     0% {
         transform: translateY(0);
     }
@@ -89,6 +67,32 @@ const headerAppearAnim = keyframes`
     100% {
         transform: translateY(0);
     }
+`
+
+const HeaderAppear = styled.div`
+    position: fixed;
+    height: 15vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    animation: ${headerAppearAnim} 0.6s ease;
+    animation-fill-mode: forwards;
+`
+
+const HeaderDisappear = styled.div`
+    position: fixed;
+    height: 15vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    animation: ${headerDisappearAnim} 0.6s ease;
+    animation-fill-mode: forwards;
 `
 
 export const Content = styled.div`
