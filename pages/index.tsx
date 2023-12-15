@@ -2,7 +2,7 @@ export async function getServerSideProps() {
   const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=3');
   const data = response.data.objectIDs;
   let start: number = 0;
-  let end: number = 10;
+  let end: number = 16;
   let item;
   let res = [];
 
@@ -17,8 +17,8 @@ export async function getServerSideProps() {
 }
 
 import axios from 'axios';
-import Image from 'next/image';
-import { View, Font4 } from '../styles/styles';
+
+import { View, Font4, Header, Content, Image } from '../styles/styles';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { FirstActive } from '../modules/modules';
 
@@ -41,13 +41,15 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
 
   return (
     <View>
-      <Font4>The Metropolitan Museum</Font4>
+      <Header />
+      <Content>
       { res.length !== 0 && res.map((item:resType, index:number) => {
           return (
-            <Image key={index} src={item.primaryImage} alt="..." width={100} height={100} />
+            <Image key={index} src={item.primaryImage} />
           )
         })
       }
+      </Content>
     </View>
   )
 
