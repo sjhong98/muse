@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import styled, {keyframes} from "styled-components";
+import Skeleton from '@mui/material/Skeleton';
 
 export const View = styled.div`
     width: 100vw;
@@ -108,15 +109,6 @@ export const Content = styled.div`
     grid-column-gap: 3vw;
 `
 
-// export function Target() {
-    
-//     return (
-//         <div style={{width: '100%', height: '10vh'}} />
-//     )
-// }
-
-
-
 export const Font4 = styled.p`
     font-size: 6rem;
     color: black;
@@ -126,4 +118,30 @@ export const Image = styled.img`
     width: 100%;
     object-fit: cover;   
 `
+
+const SkeletonStyle = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-row-gap: 5vh;
+    width: 70%;
+    justify-content: space-between;
+    margin-top: 5vh;
+`
+
+export function Skeletons() {
+    return (
+        <SkeletonStyle>
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+            <Skeleton variant="rectangular" width={250} height={250} />
+        </SkeletonStyle>
+    )
+}
+
 
