@@ -17,13 +17,14 @@ export async function getServerSideProps() {
 }
 
 import axios from 'axios';
-import { View, Header, Content, Image, Skeletons } from '../components/components';
+import { View, Header, Content, Image, Skeletons, ContentModal } from '../components/components';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-
+import Modal from '@mui/material/Modal';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface resType {
   primaryImage: string,
+  title: string,
 }
 
 export default function Home(response : InferGetServerSidePropsType<GetServerSideProps>) {
@@ -31,7 +32,8 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   let count:number = 0;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
-  const [selected, setSelected] = useState(-1);
+  const [open, setOpen] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<resType>({});
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -81,8 +83,12 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
     };
   }, [])
 
-  const modalOpen = (res:resType) => {
-    console.log("res", res);
+  const modalOpen = (item:resType) => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
   }
 
   return (
@@ -91,14 +97,25 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
       <Content>
       { res.length !== 0 && res.map((item:resType, index:number) => {
           return (
-            item.primaryImage !== "" ?
-            <Image 
-              key={index} 
-              src={item.primaryImage} 
-              onClick={() => {modalOpen(item)}}
-            />
-            :
-            <></>
+                item.primaryImage !== "" ?
+                <div>
+                  <Image 
+                    key={index} 
+                    src={item.primaryImage} 
+                    onClick={() => {modalOpen(item)}}
+                  />
+                  <Modal 
+                      style={{display:'flex', justifyContent:'center', alignItems:'center'}} 
+                      open={open} 
+                      onClose={handleClose}
+                    >
+                      <ContentModal>
+                        <p style={{color:'black'}}>hello</p>
+                      </ContentModal>
+                  </Modal>
+                </div>
+                :
+                <></>
           )
         })
       }

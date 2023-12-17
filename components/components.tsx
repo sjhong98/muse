@@ -4,9 +4,13 @@ import React, { useEffect, useState } from "react";
 import styled, {keyframes} from "styled-components";
 import Skeleton from '@mui/material/Skeleton';
 
+interface resType {
+    primaryImage: string,
+    title: string,
+  }
+
 export const View = styled.div`
     width: 100vw;
-    min-height: 200vh;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -165,5 +169,22 @@ export function Skeletons() {
         </SkeletonStyle>
     )
 }
+
+interface modalProps {
+    open:boolean;
+    item:resType;
+}
+
+export const ContentModal = styled.div`
+    position: absolute;
+    background-color: white;
+    width: 70vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+`
 
 
