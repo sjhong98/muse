@@ -101,6 +101,7 @@ export const Content = styled.div`
     grid-template-rows: repeat(4, 1fr);
     grid-row-gap: 5vh;
     grid-column-gap: 3vw;
+    cursor: pointer;
 `
 
 export const Font4 = styled.p`
@@ -131,12 +132,11 @@ export const Image = styled.img`
     object-fit: cover;   
 
     &:hover {
-        animation: ${selectedAnim} 0.5 ease;
-        animation-fill-mode: forwards;
+        animation: ${selectedAnim} 0.5s ease forwards;
     }
 
     &:not(:hover) {
-    animation: ${unselectedAnim} 0.5 ease;
+    animation: ${unselectedAnim} 0.5s ease forwards;
     animation-fill-mode: forwards;
   }
 `

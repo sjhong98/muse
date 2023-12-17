@@ -81,13 +81,8 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
     };
   }, [])
 
-  const handleMouseOver = (index:number) => {
-    setSelected(index);
-    console.log("index : ", index);
-  }
-
-  const handleMouseOut = () => {
-    setSelected(-1);
+  const modalOpen = (res:resType) => {
+    console.log("res", res);
   }
 
   return (
@@ -98,11 +93,9 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
           return (
             item.primaryImage !== "" ?
             <Image 
-              className={index===selected ? 'selected' : 'unselected'}
               key={index} 
               src={item.primaryImage} 
-              onMouseOver={()=>handleMouseOver(index)} 
-              onMouseOut={handleMouseOut} 
+              onClick={() => {modalOpen(item)}}
             />
             :
             <></>
