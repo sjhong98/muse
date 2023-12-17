@@ -30,8 +30,6 @@ export function Header() {
     }, [])
 
     const handleScroll = () => {
-        // console.log('last:', lastScrollPosition, " / cur:", window.scrollY);
-
         // 마지막으로 스크롤된 위치와 현재 스크롤 위치를 비교
         if(window.scrollY > lastScrollPosition) // scrolled-up
             setScrolled(true);
@@ -72,7 +70,7 @@ const headerAppearAnim = keyframes`
     }
 `
 
-const HeaderAppear = styled.div`
+const HeaderInterface = styled.div`
     position: fixed;
     height: 15vh;
     width: 100%;
@@ -81,19 +79,15 @@ const HeaderAppear = styled.div`
     justify-content: center;
     align-items: center;
     background-color: #fff;
+    z-index: 9999;
+`
+
+const HeaderAppear = styled(HeaderInterface)`
     animation: ${headerAppearAnim} 0.6s ease;
     animation-fill-mode: forwards;
 `
 
-const HeaderDisappear = styled.div`
-    position: fixed;
-    height: 15vh;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
+const HeaderDisappear = styled(HeaderInterface)`
     animation: ${headerDisappearAnim} 0.6s ease;
     animation-fill-mode: forwards;
 `
@@ -114,9 +108,37 @@ export const Font4 = styled.p`
     color: black;
 `
 
+const selectedAnim = keyframes`
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+`
+
+const unselectedAnim = keyframes`
+    0% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+`
+
 export const Image = styled.img`
     width: 100%;
     object-fit: cover;   
+
+    &:hover {
+        animation: ${selectedAnim} 0.5 ease;
+        animation-fill-mode: forwards;
+    }
+
+    &:not(:hover) {
+    animation: ${unselectedAnim} 0.5 ease;
+    animation-fill-mode: forwards;
+  }
 `
 
 const SkeletonStyle = styled.div`

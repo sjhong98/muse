@@ -1,5 +1,5 @@
 export async function getServerSideProps() {
-  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=3');
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1');
   const data = response.data.objectIDs;
   let start: number = 0;
   let end: number = 40;
@@ -29,10 +29,9 @@ interface resType {
 export default function Home(response : InferGetServerSidePropsType<GetServerSideProps>) {
   const targetRef = useRef<HTMLDivElement>(null);
   let count:number = 0;
-  // let isLoading:boolean = false;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
-
+  const [selected, setSelected] = useState(-1);
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -42,9 +41,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   const handleLoading = () => {
     if(count !== 0 && !isLoading) {
       FetchData();
-      // isLoading = true;
       setIsLoading(true);
-      console.log("data fetching ... ");
     } else {
       count++;
     }
@@ -54,7 +51,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
     const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=3');
     const data = response.data.objectIDs;
     let start: number = 0;
-    let end: number = 40;
+    let end: number = 20;
     let item;
     let temp:resType[] = [...res];
 
@@ -82,8 +79,16 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
         observer.unobserve(targetRef.current);
       }
     };
-    
   }, [])
+
+  const handleMouseOver = (index:number) => {
+    setSelected(index);
+    console.log("index : ", index);
+  }
+
+  const handleMouseOut = () => {
+    setSelected(-1);
+  }
 
   return (
     <View>
@@ -91,7 +96,16 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
       <Content>
       { res.length !== 0 && res.map((item:resType, index:number) => {
           return (
-            <Image key={index} src={item.primaryImage} />
+            item.primaryImage !== "" ?
+            <Image 
+              className={index===selected ? 'selected' : 'unselected'}
+              key={index} 
+              src={item.primaryImage} 
+              onMouseOver={()=>handleMouseOver(index)} 
+              onMouseOut={handleMouseOut} 
+            />
+            :
+            <></>
           )
         })
       }
