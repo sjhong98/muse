@@ -178,13 +178,15 @@ interface modalProps {
 export const ContentModal = styled.div`
     position: absolute;
     background-color: white;
-    width: 70vw;
+    width: 50vw;
     height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 3rem;
+    border-radius: 2%;
+    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
 `
 
 

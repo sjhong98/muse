@@ -20,6 +20,7 @@ import axios from 'axios';
 import { View, Header, Content, Image, Skeletons, ContentModal } from '../components/components';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface resType {
@@ -98,19 +99,27 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
       { res.length !== 0 && res.map((item:resType, index:number) => {
           return (
                 item.primaryImage !== "" ?
-                <div>
+                <div key={index} >
                   <Image 
-                    key={index} 
                     src={item.primaryImage} 
                     onClick={() => {modalOpen(item)}}
                   />
                   <Modal 
-                      style={{display:'flex', justifyContent:'center', alignItems:'center'}} 
+                      style={{display:'flex', justifyContent:'center', alignItems:'center',
+                      }} 
                       open={open} 
                       onClose={handleClose}
+                      // slots={{ backdrop: Backdrop }}
+                      slotProps={{
+                        backdrop: {
+                          sx: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                          },
+                        },
+                      }}
                     >
                       <ContentModal>
-                        <p style={{color:'black'}}>hello</p>
+                        <p style={{color:'black'}}>hello</p> 
                       </ContentModal>
                   </Modal>
                 </div>
