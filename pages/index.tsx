@@ -20,7 +20,6 @@ import axios from 'axios';
 import { View, Header, Content, Image, Skeletons, ContentModal } from '../components/components';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface resType {
@@ -34,7 +33,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
   const [open, setOpen] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<resType>({});
+  const [modalContent, setModalContent] = useState<resType>();
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
