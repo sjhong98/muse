@@ -59,11 +59,11 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
 
     for(let i=start; i<end; i++) {
       item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
-      temp.push(item.data);
+      if(item.data.primaryImage !== "")
+        temp.push(item.data);
     }
 
     setRes(temp);
-    // isLoading = false;
     setIsLoading(false);
   }
 
