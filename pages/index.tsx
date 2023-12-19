@@ -46,6 +46,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
   const [index, setIndex] = useState<number>(3);
+  const [active, setActive] = useState<boolean>(false);
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -54,6 +55,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
 
   const handleLoading = () => {
     if(count !== 0 && !isLoading) {
+      setRes([]);
       FetchData(3, true);
       setIsLoading(true);
     } else {
@@ -103,8 +105,12 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   }, [])
 
   useEffect(() => {
-    setRes([]);
-    FetchData(index, false);
+    if(active) {
+      setRes([]);
+      FetchData(index, false);
+    }
+    else
+      setActive(true);
   }, [index])
 
   return (
