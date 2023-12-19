@@ -8,7 +8,8 @@ export async function getServerSideProps() {
 
   for(let i=start; i<end; i++) {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
-    res.push(item.data);
+    if(item.data.primaryImage !== "")
+        res.push(item.data);
   }
 
   return {
@@ -19,12 +20,20 @@ export async function getServerSideProps() {
 import axios from 'axios';
 import { View, Header, Content, Image, Skeletons, ContentModal } from '../components/components';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Modal from '@mui/material/Modal';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface resType {
   primaryImage: string,
   title: string,
+  city: string,
+  artistDisplayBio: string,
+  artistDisplayName: string,
+  country: string,
+  dimensions: string,
+  medium: string,
+  objectName: string,
+  objectURL: string,
+  repository: string
 }
 
 export default function Home(response : InferGetServerSidePropsType<GetServerSideProps>) {
@@ -32,8 +41,6 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   let count:number = 0;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
-  const [open, setOpen] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<resType>();
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -73,6 +80,8 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   }
       
   useEffect(() => {
+    console.log("res : ", res);
+
     if(targetRef.current) {
       observer.observe(targetRef.current);
     }
@@ -81,53 +90,13 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
         observer.unobserve(targetRef.current);
       }
     };
+    
   }, [])
-
-  const modalOpen = (item:resType) => {
-    setOpen(true);
-  }
-
-  const handleClose = () => {
-    setOpen(false);
-  }
 
   return (
     <View>
       <Header />
-      <Content>
-      { res.length !== 0 && res.map((item:resType, index:number) => {
-          return (
-                item.primaryImage !== "" ?
-                <div key={index} >
-                  <Image 
-                    src={item.primaryImage} 
-                    onClick={() => {modalOpen(item)}}
-                  />
-                  <Modal 
-                      style={{display:'flex', justifyContent:'center', alignItems:'center',
-                      }} 
-                      open={open} 
-                      onClose={handleClose}
-                      // slots={{ backdrop: Backdrop }}
-                      slotProps={{
-                        backdrop: {
-                          sx: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          },
-                        },
-                      }}
-                    >
-                      <ContentModal>
-                        <p style={{color:'black'}}>hello</p> 
-                      </ContentModal>
-                  </Modal>
-                </div>
-                :
-                <></>
-          )
-        })
-      }
-      </Content>
+      <Content res={res} />
       { isLoading ?
         <Skeletons />
         :
