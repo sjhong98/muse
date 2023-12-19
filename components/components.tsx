@@ -3,8 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, {keyframes} from "styled-components";
 import Skeleton from '@mui/material/Skeleton';
-import Logo from '../assets/logo.jpeg';
-import ImageNext from "next/image";
+
 
 interface resType {
     primaryImage: string,
@@ -28,84 +27,6 @@ export const View = styled.div`
     align-items: center;
 `
 
-export function Header() {
-    const [scrolled, setScrolled] = useState(false);
-    let lastScrollPosition: number;
-
-    // 일부 프레임워크들은 서버에서 코드를 실행하여 초기 렌더링 수행 -> 방어적인 코드 필요
-    if(typeof window !== 'undefined') 
-        lastScrollPosition = window.scrollY;
-
-    useEffect(() => {
-            window.addEventListener('scroll', handleScroll);
-            return () => {
-                window.removeEventListener('scroll', handleScroll);
-            }
-        
-    }, [])
-
-    const handleScroll = () => {
-        // 마지막으로 스크롤된 위치와 현재 스크롤 위치를 비교
-        if(window.scrollY > lastScrollPosition) // scrolled-up
-            setScrolled(true);
-        else    // scrolled-down
-            setScrolled(false);
-        lastScrollPosition = window.scrollY
-    }
-
-    return (
-        scrolled ?
-            <HeaderDisappear>
-                <ImageNext alt="..." src={Logo} className="w-80 mt-5" />
-            </HeaderDisappear>
-            :
-            <HeaderAppear>
-                <ImageNext alt="..." src={Logo} className="w-80 mt-5" />
-            </HeaderAppear>
-    )
-}
-
-// 함수와 변수의 선언만 호이스팅 적용 대상 -> keyframes는 아무것도 아니므로 호이스팅 적용대상 X
-
-const headerDisappearAnim = keyframes`
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-35vh);
-    }
-`
-
-const headerAppearAnim = keyframes`
-    0% {
-        transform: translateY(-35vh);
-    }
-    100% {
-        transform: translateY(0);
-    }
-`
-
-const HeaderInterface = styled.div`
-    position: fixed;
-    height: 25vh;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    z-index: 9997;
-`
-
-const HeaderAppear = styled(HeaderInterface)`
-    animation: ${headerAppearAnim} 0.6s ease;
-    animation-fill-mode: forwards;
-`
-
-const HeaderDisappear = styled(HeaderInterface)`
-    animation: ${headerDisappearAnim} 0.6s ease;
-    animation-fill-mode: forwards;
-`
 
 export const ContentComponent = styled.div`
     width: 70%;

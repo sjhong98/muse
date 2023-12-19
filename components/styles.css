@@ -1,0 +1,26 @@
+@keyframes menuOpenAnim {
+    0% {
+        transform: scale(0);
+
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+@keyframes menuCloseAnim {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.1);
+    }
+}
+
+.menu-open {
+    animation: menuOpenAnim 1s ease forwards;
+}
+
+.menu-close {
+    animation: menuCloseAnim 1s ease forwards;
+}

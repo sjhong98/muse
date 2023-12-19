@@ -8,6 +8,8 @@ export async function getServerSideProps() {
 
   for(let i=start; i<end; i++) {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
+
+    // primaryImage가 없는 경우, 애초에 res에 들어가지 못하도록함
     if(item.data.primaryImage !== "")
         res.push(item.data);
   }
@@ -18,7 +20,8 @@ export async function getServerSideProps() {
 }
 
 import axios from 'axios';
-import { View, Header, Content, Image, Skeletons, ContentModal } from '../components/components';
+import { View, Content, Skeletons, } from '@/components/components';
+import { Header } from '@/components/header';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useEffect, useRef, useState } from 'react';
 
