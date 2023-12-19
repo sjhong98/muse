@@ -45,6 +45,7 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
   let count:number = 0;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [res, setRes] = useState<resType[]>(response.res);
+  const [index, setIndex] = useState<number>(3);
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -53,20 +54,24 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
 
   const handleLoading = () => {
     if(count !== 0 && !isLoading) {
-      FetchData();
+      FetchData(3, true);
       setIsLoading(true);
     } else {
       count++;
     }
   }
 
-  const FetchData = async () => {
-    const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=3');
+  const FetchData = async (_index:number, isScroll:boolean) => {
+    const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${_index}`);
     const data = response.data.objectIDs;
     let start: number = 0;
     let end: number = 20;
     let item;
-    let temp:resType[] = [...res];
+    let temp:resType[];
+    if(isScroll)
+      temp = [...res];
+    else
+      temp = [];
 
     for(let i=start; i<end; i++) {
       item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
@@ -97,9 +102,14 @@ export default function Home(response : InferGetServerSidePropsType<GetServerSid
     
   }, [])
 
+  useEffect(() => {
+    setRes([]);
+    FetchData(index, false);
+  }, [index])
+
   return (
     <View>
-      <Header />
+      <Header setIndex={setIndex} />
       <Content res={res} />
       { isLoading ?
         <Skeletons />
@@ -205,14 +215,17 @@ const ContentComponent = styled.div`
 
 const C1 = styled.p`
     font-size: 2rem;
+    font-family: 'lemon';
 `
 
 const C2 = styled.p`
     font-size: 1.2rem;
+    font-family: 'lemon';
 `
 
 const CS = styled.div`
     height: 2vh;
+    font-family: 'lemon';
 `
 
 const selectedAnim = keyframes`
