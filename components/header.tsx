@@ -2,7 +2,7 @@
 
 // server 코드의 경우, 처음 마운트되는 요소와, 이후 client 코드를 통해 마운트되는 코드의 차이가 발생 -> 위치 달라짐
 
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, MouseEventHandler, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import Logo from '../assets/logo.jpeg';
 import ImageNext from "next/image";
 import { useRouter } from "next/router";
@@ -35,10 +35,11 @@ const categries = [
 ]
 
 interface headerProps {
-    setIndex: Dispatch<SetStateAction<number>>
+    tempVal: number,
+    setIndex: Dispatch<React.SetStateAction<number>>,
 }
 
-export function Header(props:headerProps) {
+export function Header(props : any) {
     const router = useRouter();
     const headerRef = useRef<HTMLDivElement>(null);
     let lastScrollPosition: number;
@@ -86,19 +87,22 @@ export function Header(props:headerProps) {
             headerRef.current?.classList.remove('header-close');
         }
         lastScrollPosition = window.scrollY;
-        console.log(headerRef.current);
     }
 
-    const handleCategoryChange = (index:number) => {
-        props.setIndex(index);
-    }
+    const handleCategoryChange = (_index:number) => {
+        console.log("index changed : ", _index);
+        props.changeIndex(_index);
+    };
 
     return (
         <div className="flex flex-row header-open fixed z-[9998] bg-white w-[100vw]" ref={headerRef}>
             <ImageNext alt="..." src={Logo} className="w-80 mt-5 ml-[10vw]" />
-            <div className="absolute rounded-full w-[7vh] h-[7vh] bg-red-500 mt-[10vh] right-[5vw] cursor-pointer" onClick={handleMenuClick}>
-                <div ref={menuRef} className="absolute right-[-33vw] top-[0vh] bg-red-500 rounded-lg w-[36vw] h-[80vh] z-[9999] flex flex-col justify-between pt-12 pb-12 pl-6 cursor-default" >
-                {   categries.map((item:categoryType, index:number) => { 
+            <div className="absolute rounded-full w-[7vh] h-[7vh] bg-red-500 mt-[10vh] right-[5vw] cursor-pointer" onClick={handleMenuClick} >
+                <div ref={menuRef} className="absolute right-[-33vw] top-[0vh] bg-red-500 rounded-lg w-[36vw] h-[80vh] z-[9999] flex flex-col justify-between pt-6 pb-12 pl-6 cursor-default" style={{boxShadow:'0px 0px 100px 10px rgba(0, 0, 0, 0.2)'}} >
+                    <div className="rounded-full w-[3vh] h-[3vh] bg-white mb-3 cursor-pointer flex justify-center items-center">
+                        {/* <p className="lemon text-red-500 text-3xl scale-[1.2]">x</p> */}
+                    </div>
+                { categries.map((item:categoryType, index:number) => { 
                     return (
                         <p key={index} className="text-xl cursor-pointer lemon" onClick={()=>handleCategoryChange(item.category)}>{item.id}</p>
                     )})

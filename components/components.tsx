@@ -11,6 +11,7 @@ export const View = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: hidden;
 `
 
 export const Font4 = styled.p`
@@ -26,6 +27,7 @@ const SkeletonStyle = styled.div`
     width: 70%;
     justify-content: space-between;
     margin-top: 5vh;
+    margin-bottom: 10vh;
 `
 
 export function Skeletons() {

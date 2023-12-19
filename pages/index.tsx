@@ -1,30 +1,32 @@
 export async function getServerSideProps() {
-  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1');
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=12');
   const data = response.data.objectIDs;
   let start: number = 0;
   let end: number = 40;
   let item;
-  let res = [];
+  let _res = [];
 
   for(let i=start; i<end; i++) {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
 
     // primaryImage가 없는 경우, 애초에 res에 들어가지 못하도록함
     if(item.data.primaryImage !== "")
-        res.push(item.data);
+        _res.push(item.data);
   }
 
   return {
-    props: { res }
+    props: { initialData : _res }
   }
 }
+
+// "use client";
 
 import axios from 'axios';
 import { View, Skeletons } from '@/components/components';
 import styled, {keyframes} from "styled-components";
 import { Header } from '@/components/header';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 interface resType {
   primaryImage: string,
@@ -37,91 +39,169 @@ interface resType {
   medium: string,
   objectName: string,
   objectURL: string,
-  repository: string
+  repository: string,
+  objectID: number,
 }
 
-export default function Home(response : InferGetServerSidePropsType<GetServerSideProps>) {
+// 객체 리터럴을 통해 변수를 따로 저장함으로써 getServerSideProps의 결과와 독립되어 지기
+export default function Home( { initialData } : InferGetServerSidePropsType<GetServerSideProps>) {
   const targetRef = useRef<HTMLDivElement>(null);
   let count:number = 0;
+  // const [res, setRes] = useState<resType[]>(initialData);
+  const [res, setRes] = useState<resType[]>([]);
+  const [index, setIndex] = useState<number>(5);
+  const [active, setActive] = useState<boolean>(true);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(20);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [res, setRes] = useState<resType[]>(response.res);
-  const [index, setIndex] = useState<number>(3);
-  const [active, setActive] = useState<boolean>(false);
+  let noLoad = false;
+  let tempVal:number = 1;
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
     threshold: 0.1  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
   }
 
-  const handleLoading = () => {
-    if(count !== 0 && !isLoading) {
-      setRes([]);
-      FetchData(3, true);
+  useEffect(() => {
+    if(noLoad)
+      setIsLoading(false);
+    else  
       setIsLoading(true);
-    } else {
-      count++;
+    console.log("noload : ", noLoad);
+  }, [noLoad])
+
+  // useEffect(() => {
+  //   if(targetRef.current) {
+  //     observer.observe(targetRef.current);
+  //   }
+  //   return () => {
+  //     if (observer && targetRef.current) {
+  //       observer.unobserve(targetRef.current);
+  //     }
+  //   };
+  // }, [])
+
+  useEffect(() => {
+    console.log("res : ", res.length);
+  }, [res]);
+
+  // useEffect(() => {
+  //   console.log('start, end : ', start, end);
+  // }, [start, end]);
+
+  // useEffect(() => {
+  //   console.log("isLoading : ", isLoading);
+  // }, [isLoading])
+
+  
+
+  // const handleLoading = async () => {
+  //   setStart((start) => start + 20);
+  //   setEnd((end) => end + 20);
+  //   await FetchData(index, true, start, end);
+  // };
+
+  const FetchData = async (_index:number, isScroll:boolean, start:number, end:number) => {
+    if(!noLoad) {
+      noLoad = true;
+      
+      const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${_index}`);
+      const data = response.data.objectIDs;
+      let item;
+      let temp:resType[];
+      if(isScroll)
+        // temp = [...res] 로 하면 계속 배열 리셋됨. 왜 그럴까?
+        temp = res;
+      else {
+        temp = res;
+        // 이렇게 하면 객체가 해제되어 메모리에서 제거됨
+        temp.length = 0;
+      }
+      
+      console.log("\n\n\n\n");
+      console.log("fetchData 동작 중, isScroll : ", isScroll);
+      console.log("index : ", _index);
+      console.log("기존배열 : ", temp.length);
+        
+      for(let i=start; i<end; i++) {
+        item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
+        if(item.data.primaryImage !== "") {
+          temp.push(item.data);
+          console.log(temp.length);
+        }
+      }
+      setRes(temp);
+      noLoad = false;
+      console.log("완료된 배열 : ", temp.length, "\n\n\n\n");
     }
-  }
-
-  const FetchData = async (_index:number, isScroll:boolean) => {
-    const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${_index}`);
-    const data = response.data.objectIDs;
-    let start: number = 0;
-    let end: number = 20;
-    let item;
-    let temp:resType[];
-    if(isScroll)
-      temp = [...res];
-    else
-      temp = [];
-
-    for(let i=start; i<end; i++) {
-      item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
-      if(item.data.primaryImage !== "")
-        temp.push(item.data);
-    }
-
-    setRes(temp);
-    setIsLoading(false);
   }
 
   let observer:IntersectionObserver;
-  if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
-    observer = new IntersectionObserver(handleLoading, options);
-  }
-      
-  useEffect(() => {
-    console.log("res : ", res);
 
-    if(targetRef.current) {
+  // closure때매 그럼.
+  useEffect(() => {
+    
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            handleLoading();
+          }
+        });
+      }, options);
+    }
+
+    const handleLoading = async () => {
+      setStart((start) => start + 20);
+      setEnd((end) => end + 20);
+      await FetchData(index, true, start, end);
+    };
+  
+    if (targetRef.current) {
       observer.observe(targetRef.current);
     }
+  
     return () => {
       if (observer && targetRef.current) {
         observer.unobserve(targetRef.current);
       }
     };
-    
-  }, [])
-
+  }, [index]); 
+  
+  
   useEffect(() => {
-    if(active) {
-      setRes([]);
-      FetchData(index, false);
-    }
-    else
-      setActive(true);
-  }, [index])
+    console.log("index changed");
+    const fetchDataAndUpdateState = async () => {
+      const newObject: resType[] = [];
+      if (active) {
+        setRes(newObject);
+        setStart((start) => start + 20);
+        setEnd((end) => end + 20);
+        await FetchData(index, false, start, end);
+      } else {
+        setActive(true);
+      }
+      setStart(0);
+      setEnd(20);
+    };
+  
+    fetchDataAndUpdateState();
+  }, [index]);
+
+  const changeIndex = (newIndex: number) => {
+    setIndex((index) => newIndex);
+  };
 
   return (
     <View>
-      <Header setIndex={setIndex} />
+      <Header changeIndex={changeIndex} />
       <Content res={res} />
       { isLoading ?
         <Skeletons />
         :
         <></>
       }
+      <div style={{height:'50vh', width:'100vw'}}></div>
       <div ref={targetRef} style={{height:'10vh', width:'100vw'}} />
     </View>
   )
@@ -199,7 +279,6 @@ function Content(props:contentProps) {
                             onClick={() => setSelected(index)}
                             src={item.primaryImage} 
                         />
-                        
                 :
                 <></>
             )
