@@ -55,7 +55,6 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
   const [end, setEnd] = useState<number>(20);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let noLoad = false;
-  let tempVal:number = 1;
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
@@ -205,7 +204,6 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
       <div ref={targetRef} style={{height:'10vh', width:'100vw'}} />
     </View>
   )
-
 }
 
 interface contentProps {
