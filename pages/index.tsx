@@ -1,5 +1,5 @@
 export async function getServerSideProps() {
-  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=12');
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1');
   const data = response.data.objectIDs;
   let start: number = 0;
   let end: number = 40;

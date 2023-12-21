@@ -28,6 +28,7 @@ const SkeletonStyle = styled.div`
     justify-content: space-between;
     margin-top: 5vh;
     margin-bottom: 10vh;
+    margin-top: -0vh;
 `
 
 export function Skeletons() {
