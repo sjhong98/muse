@@ -200,7 +200,7 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
         :
         <></>
       }
-      <div style={{height:'50vh', width:'100vw'}}></div>
+      <div style={{height:'10vh', width:'100vw'}}></div>
       <div ref={targetRef} style={{height:'10vh', width:'100vw'}} />
     </View>
   )
