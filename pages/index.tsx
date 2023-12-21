@@ -1,5 +1,5 @@
 export async function getServerSideProps() {
-  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1');
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=6');
   const data = response.data.objectIDs;
   let start: number = 0;
   let end: number = 40;
@@ -56,9 +56,13 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let noLoad = false;
 
+  useEffect(() => {
+    console.log(initialData)
+  }, [])
+
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
-    threshold: 0.1  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
+    threshold: 0.2  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
   }
 
   useEffect(() => {
@@ -195,13 +199,15 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
     <View>
       <Header changeIndex={changeIndex} />
       <Content res={res} />
-      { isLoading ?
+      {/* { isLoading ?
         <Skeletons />
         :
         <></>
-      }
-      <div style={{height:'10vh', width:'100vw'}}></div>
-      <div ref={targetRef} style={{height:'10vh', width:'100vw'}} />
+      } */}
+      <div ref={targetRef} style={{height:'1vh', width:'100vw'}} />
+      <Skeletons />
+      {/* <div style={{height:'10vh', width:'100vw'}}></div>
+      <div ref={targetRef} style={{height:'10vh', width:'100vw'}} /> */}
     </View>
   )
 }
