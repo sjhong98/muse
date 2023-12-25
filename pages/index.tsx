@@ -145,12 +145,8 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
   useEffect(() => {
     
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
-      observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            handleLoading();
-          }
-        });
+      observer = new IntersectionObserver(() => {
+        handleLoading();
       }, options);
     }
 
