@@ -1,5 +1,5 @@
 export async function getServerSideProps() {
-  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=6');
+  const response = await axios.get('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=10');
   const data = response.data.objectIDs;
   let start: number = 0;
   let end: number = 40;
@@ -10,7 +10,7 @@ export async function getServerSideProps() {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
 
     // primaryImage가 없는 경우, 애초에 res에 들어가지 못하도록함
-    if(item.data.primaryImage !== "")
+    // if(item.data.primaryImage !== "")
         _res.push(item.data);
   }
 
@@ -26,7 +26,7 @@ import { View, Skeletons } from '@/components/components';
 import styled, {keyframes} from "styled-components";
 import { Header } from '@/components/header';
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface resType {
   primaryImage: string,
@@ -47,62 +47,26 @@ interface resType {
 export default function Home( { initialData } : InferGetServerSidePropsType<GetServerSideProps>) {
   const targetRef = useRef<HTMLDivElement>(null);
   let count:number = 0;
-  // const [res, setRes] = useState<resType[]>(initialData);
   const [res, setRes] = useState<resType[]>([]);
   const [index, setIndex] = useState<number>(5);
-  const [active, setActive] = useState<boolean>(true);
+  const [active, setActive] = useState<boolean>(false);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(20);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   let noLoad = false;
 
   useEffect(() => {
-    console.log(initialData)
-  }, [])
+    console.log("initialData", initialData);
+    setRes(initialData);
+  }, []);
+
+  useEffect(() => {
+    console.log("res: ", res);
+  }, [res])
 
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
     threshold: 0.2  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
   }
-
-  useEffect(() => {
-    if(noLoad)
-      setIsLoading(false);
-    else  
-      setIsLoading(true);
-    console.log("noload : ", noLoad);
-  }, [noLoad])
-
-  // useEffect(() => {
-  //   if(targetRef.current) {
-  //     observer.observe(targetRef.current);
-  //   }
-  //   return () => {
-  //     if (observer && targetRef.current) {
-  //       observer.unobserve(targetRef.current);
-  //     }
-  //   };
-  // }, [])
-
-  useEffect(() => {
-    console.log("res : ", res.length);
-  }, [res]);
-
-  // useEffect(() => {
-  //   console.log('start, end : ', start, end);
-  // }, [start, end]);
-
-  // useEffect(() => {
-  //   console.log("isLoading : ", isLoading);
-  // }, [isLoading])
-
-  
-
-  // const handleLoading = async () => {
-  //   setStart((start) => start + 20);
-  //   setEnd((end) => end + 20);
-  //   await FetchData(index, true, start, end);
-  // };
 
   const FetchData = async (_index:number, isScroll:boolean, start:number, end:number) => {
     if(!noLoad) {
@@ -130,9 +94,9 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
         item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
         if(item.data.primaryImage !== "") {
           temp.push(item.data);
-          console.log(temp.length);
         }
       }
+      console.log("temp : ", temp);
       setRes(temp);
       noLoad = false;
       console.log("완료된 배열 : ", temp.length, "\n\n\n\n");
@@ -143,7 +107,6 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
 
   // closure때매 그럼.
   useEffect(() => {
-    
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       observer = new IntersectionObserver(() => {
         handleLoading();
@@ -151,9 +114,14 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
     }
 
     const handleLoading = async () => {
-      setStart((start) => start + 20);
-      setEnd((end) => end + 20);
-      await FetchData(index, true, start, end);
+      if(active){
+        console.log('handleLoading');
+        setStart((start) => start + 20);
+        setEnd((end) => end + 20);
+        await FetchData(index, true, start, end);
+      } else {
+        setActive(true);
+      }
     };
   
     if (targetRef.current) {
@@ -165,11 +133,11 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
         observer.unobserve(targetRef.current);
       }
     };
+    // index 바뀔 때 새로운 function과 handler 등록하는 부분
   }, [index]); 
   
-  
   useEffect(() => {
-    console.log("index changed");
+    console.log("index changed, ", active);
     const fetchDataAndUpdateState = async () => {
       const newObject: resType[] = [];
       if (active) {
@@ -185,6 +153,7 @@ export default function Home( { initialData } : InferGetServerSidePropsType<GetS
     };
   
     fetchDataAndUpdateState();
+    // index 바뀔 때 새로운 res 받아오는 부분
   }, [index]);
 
   const changeIndex = (newIndex: number) => {
