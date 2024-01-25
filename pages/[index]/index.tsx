@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 export const getStaticPaths = async () => {
   let temp = [];
   for(let i=1; i<=21; i++)
-    if(i !== 2)
+    if(i !== 2 && i !== 20)
       temp.push({params:{index: `${i}`}});
   console.log("temp");
   return {
@@ -21,7 +21,7 @@ export const getStaticPaths = async () => {
 }
 
 export async function getStaticProps(context:any) {
-  console.log("\n\n\n\n\n\nStaticProps : ", context.params.index);
+  console.log("\nStaticProps : ", context.params.index);
   const index:string = context.params.index;
   const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${index}`);
   const data = response.data.objectIDs;
