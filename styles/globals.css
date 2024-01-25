@@ -174,3 +174,36 @@ a {
 .lemon {
   font-family: "lemon";
 }
+
+@keyframes selectedAnim {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+      transform: scale(1.1);
+  }
+    
+}
+
+@keyframes unselectedAnim {
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+
+.image {
+  width: 100%;
+    object-fit: cover;   
+    cursor: pointer;
+
+    &:hover {
+        animation: selectedAnim 0.5s ease forwards;
+    }
+
+    &:not(:hover) {
+        animation: unselectedAnim 0.5s ease forwards;
+    }
+}
