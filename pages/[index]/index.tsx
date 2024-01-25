@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 export const getStaticPaths = async () => {
   let temp = [];
-  for(let i=1; i<=2; i++)
+  for(let i=1; i<=1; i++)
     if(i !== 2 && i !== 20)
       temp.push({params:{index: `${i}`}});
   console.log("\nGetStaticPaths : ", temp);
