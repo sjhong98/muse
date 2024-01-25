@@ -20,40 +20,51 @@ export const getStaticPaths = async () => {
   }
 }
 
-export async function getStaticProps(context:any) {
+export async function getStaticProps(context: any) {
   console.log("\nStaticProps : ", context.params.index);
-  const index:string = context.params.index;
-  const response = axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${index}`);
+  const index: string = context.params.index;
+  const response = await axios.get(
+    `https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${index}`
+  );
   const data = response.data.objectIDs;
-  let item;
-  let _res = [];
 
-  for(let i=0; i<20; i++) {
-    item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
-    if(item.data.primaryImageSmall !== ""){
-      let temp = {
-        primaryImageSmall: item.data.primaryImageSmall,
-        title: item.data.title,
-        city: item.data.city,
-        artistDisplayBio: item.data.artistDisplayBio,
-        artistDisplayName: item.data.artistDisplayName,
-        country: item.data.country,
-        dimensions: item.data.dimensions,
-        medium: item.data.medium,
-        objectName: item.data.objectName,
-        objectURL: item.data.objectURL,
-        repostory: item.data.repository,
-        objectID: item.data.objectID
-      }
-      _res.push(temp);
+  try {
+    const promises = data.slice(0, 20).map(async (objectId:any) => {
+      const item = await axios.get(
+        `https://collectionapi.metmuseum.org/public/collection/v1/objects/${objectId}`
+      );
       
-    }
-  }
+      if (item.data.primaryImageSmall !== "") {
+        return {
+          primaryImageSmall: item.data.primaryImageSmall,
+          title: item.data.title,
+          city: item.data.city,
+          artistDisplayBio: item.data.artistDisplayBio,
+          artistDisplayName: item.data.artistDisplayName,
+          country: item.data.country,
+          dimensions: item.data.dimensions,
+          medium: item.data.medium,
+          objectName: item.data.objectName,
+          objectURL: item.data.objectURL,
+          repostory: item.data.repository,
+          objectID: item.data.objectID,
+        };
+      }
+    });
 
-  return {
-    props: { initialData : _res }
+    const _res = await Promise.all(promises);
+
+    return {
+      props: { initialData: _res.filter(Boolean) }, 
+    };
+  } catch (error) {
+    console.error("Error fetching data:");
+    return {
+      props: { initialData: [] },
+    };
   }
 }
+
 
 // 객체 리터럴을 통해 변수를 따로 저장함으로써 getServerSideProps의 결과와 독립되어 지기
 export default function Home( { initialData } : InferGetStaticPropsType<GetStaticProps>) {
