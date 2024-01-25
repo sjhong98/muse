@@ -20,24 +20,6 @@ export const getStaticPaths = async () => {
   }
 }
 
-User
-next.js에서 SSG 페이지를 구현해서 vercel로 배포하려고 하는데, 배포 과정에서 에러가 발생해. 
-
-
-우선 코드는 다음과 같아.
-
-export const getStaticPaths = async () => {
-  let temp = [];
-  for(let i=1; i<=21; i++)
-    if(i !== 2 && i !== 20)
-      temp.push({params:{index: `${i}`}});
-  console.log("\nGetStaticPaths : ", temp);
-  return {
-      paths: temp, 
-      fallback: false
-  }
-}
-
 export async function getStaticProps(context:any) {
   console.log("\nStaticProps : ", context.params.index);
   const index:string = context.params.index;
