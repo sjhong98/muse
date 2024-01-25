@@ -28,7 +28,7 @@ export async function getStaticProps(context:any) {
   let item;
   let _res = [];
 
-  for(let i=0; i<2; i++) {
+  for(let i=0; i<1; i++) {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
     if(item.data.primaryImageSmall !== ""){
       let temp = {
