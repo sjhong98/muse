@@ -27,17 +27,6 @@ export default function Header() {
         }
     }, [isMenuOpen])
 
-    // 일부 프레임워크들은 서버에서 코드를 실행하여 초기 렌더링 수행 -> 방어적인 코드 필요
-    if(typeof window !== 'undefined') 
-        lastScrollPosition = window.scrollY;
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        }
-    }, [handleScroll])
-
     const handleScroll = () => {
         // 마지막으로 스크롤된 위치와 현재 스크롤 위치를 비교
         if(window.scrollY > lastScrollPosition) // scrolled-down -> header 올라가야 함
@@ -54,6 +43,19 @@ export default function Header() {
         }
         lastScrollPosition = window.scrollY;
     }
+
+    // 일부 프레임워크들은 서버에서 코드를 실행하여 초기 렌더링 수행 -> 방어적인 코드 필요
+    if(typeof window !== 'undefined') 
+        lastScrollPosition = window.scrollY;
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        }
+    }, [handleScroll])
+
+    
 
     const handleCategoryChange = (index:number) => {
         console.log(index);
