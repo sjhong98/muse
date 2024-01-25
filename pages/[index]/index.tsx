@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 export const getStaticPaths = async () => {
   let temp = [];
-  for(let i=1; i<=21; i++)
+  for(let i=1; i<=2; i++)
     if(i !== 2 && i !== 20)
       temp.push({params:{index: `${i}`}});
   console.log("\nGetStaticPaths : ", temp);
@@ -28,7 +28,7 @@ export async function getStaticProps(context:any) {
   let item;
   let _res = [];
 
-  for(let i=0; i<0; i++) {
+  for(let i=0; i<20; i++) {
     item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
     if(item.data.primaryImageSmall !== ""){
       let temp = {
