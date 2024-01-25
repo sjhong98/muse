@@ -13,7 +13,7 @@ export const getStaticPaths = async () => {
   for(let i=1; i<=21; i++)
     if(i !== 2 && i !== 20)
       temp.push({params:{index: `${i}`}});
-  console.log("temp");
+  console.log("\nGetStaticPaths : ", temp);
   return {
       paths: temp, 
       fallback: false
