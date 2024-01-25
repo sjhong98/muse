@@ -20,50 +20,59 @@ export const getStaticPaths = async () => {
   }
 }
 
-export async function getStaticProps(context: any) {
-  console.log("\nStaticProps : ", context.params.index);
-  const index: string = context.params.index;
-  const response = await axios.get(
-    `https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${index}`
-  );
-  const data = response.data.objectIDs;
+User
+next.js에서 SSG 페이지를 구현해서 vercel로 배포하려고 하는데, 배포 과정에서 에러가 발생해. 
 
-  try {
-    const promises = data.slice(0, 20).map(async (objectId:any) => {
-      const item = await axios.get(
-        `https://collectionapi.metmuseum.org/public/collection/v1/objects/${objectId}`
-      );
-      
-      if (item.data.primaryImageSmall !== "") {
-        return {
-          primaryImageSmall: item.data.primaryImageSmall,
-          title: item.data.title,
-          city: item.data.city,
-          artistDisplayBio: item.data.artistDisplayBio,
-          artistDisplayName: item.data.artistDisplayName,
-          country: item.data.country,
-          dimensions: item.data.dimensions,
-          medium: item.data.medium,
-          objectName: item.data.objectName,
-          objectURL: item.data.objectURL,
-          repostory: item.data.repository,
-          objectID: item.data.objectID,
-        };
-      }
-    });
 
-    const _res = await Promise.all(promises);
+우선 코드는 다음과 같아.
 
-    return {
-      props: { initialData: _res.filter(Boolean) }, 
-    };
-  } catch (error) {
-    console.error("Error fetching data:");
-    return {
-      props: { initialData: [] },
-    };
+export const getStaticPaths = async () => {
+  let temp = [];
+  for(let i=1; i<=21; i++)
+    if(i !== 2 && i !== 20)
+      temp.push({params:{index: `${i}`}});
+  console.log("\nGetStaticPaths : ", temp);
+  return {
+      paths: temp, 
+      fallback: false
   }
 }
+
+export async function getStaticProps(context:any) {
+  console.log("\nStaticProps : ", context.params.index);
+  const index:string = context.params.index;
+  const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${index}`);
+  const data = response.data.objectIDs;
+  let item;
+  let _res = [];
+
+  for(let i=0; i<20; i++) {
+    item = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${data[i]}`)
+    if(item.data.primaryImageSmall !== ""){
+      let temp = {
+        primaryImageSmall: item.data.primaryImageSmall,
+        title: item.data.title,
+        city: item.data.city,
+        artistDisplayBio: item.data.artistDisplayBio,
+        artistDisplayName: item.data.artistDisplayName,
+        country: item.data.country,
+        dimensions: item.data.dimensions,
+        medium: item.data.medium,
+        objectName: item.data.objectName,
+        objectURL: item.data.objectURL,
+        repostory: item.data.repository,
+        objectID: item.data.objectID
+      }
+      _res.push(temp);
+      
+    }
+  }
+
+  return {
+    props: { initialData : _res }
+  }
+}
+
 
 
 // 객체 리터럴을 통해 변수를 따로 저장함으로써 getServerSideProps의 결과와 독립되어 지기
