@@ -36,7 +36,7 @@ export default function Header() {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         }
-    }, [])
+    }, [handleScroll])
 
     const handleScroll = () => {
         // 마지막으로 스크롤된 위치와 현재 스크롤 위치를 비교

@@ -68,7 +68,7 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
   useEffect(() => {
     console.log("query changed", initialData);
     setRes(initialData);
-  }, [router.query])
+  }, [router.query, initialData])
 
 
   let observer:IntersectionObserver;
