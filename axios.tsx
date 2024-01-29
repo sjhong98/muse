@@ -26,6 +26,5 @@ export async function Axios(startIndex:number, category:number) {
             items.push(temp);
         }
     }
-    // console.log("items : ", items);
     return items;
 }

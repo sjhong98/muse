@@ -53,46 +53,43 @@ export async function getStaticProps(context:any) {
   }
 }
 
-
-
 // 객체 리터럴을 통해 변수를 따로 저장함으로써 getServerSideProps의 결과와 독립되어 지기
 export default function Home( { initialData } : InferGetStaticPropsType<GetStaticProps>) {
   const [res, setRes] = useState<resType[]>(initialData);
-  const [fetchIndex, setFetchIndex] = useState<number>(0);
+  const [fetchIndex, setFetchIndex] = useState<number>(40);
   const [target, setTarget] = useState<any>();
   const router = useRouter();
   let flag = false;
   const options = {
     root: null,   // 타겟요소가 어디에 들어왔을 때 동작할 것인지 설정. null일경우 viewport에 target이 들어올 경우 동작. document.querySelector('')로 특정요소 지정 가능
-    threshold: 0.2  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
+    threshold: 1  // 타겟요소가 root에 얼마나 진입했을 때 동작할 것인지 설정. 1일 경우 전체가 진입해야 함. 
   }
 
-  const handleLoading = useCallback(([entry]:any, observer:any) => {
-    console.log("handleLoading : ", flag, entry);
-    if(entry.isIntersecting && flag) {
-      console.log("동작");
-      observer.unobserve(entry.target);
-      // observe 해체
-      Axios(fetchIndex, JSON.parse(router.query.index as string)).then((_res) => {
-        setRes((prev)=>[...prev, ..._res]);
-        observer.observe(entry.target);
-        // observer 재시작
-      });
-    }
-    flag = true;
-  }, [target]);
+  // useEffect(() => {
+  //   const handleLoading = ([entry]:any, observer:any) => {
+  //     if(entry.isIntersecting && flag) {
+  //       observer.unobserve(entry.target);
+  //       // observe 해체
+  //       Axios(fetchIndex, JSON.parse(router.query.index as string)).then((_res) => {
+  //         setRes((prev)=>[...prev, ..._res]);
+  //         observer.observe(entry.target);
+  //         // observer 재시작
+  //       });
+  //     }
+  //     flag = true;
+  //     setFetchIndex((prev)=>prev+20);
+  //   }
 
-  useEffect(() => {
-    let observer:any;
-    if(target) {
-      observer = new IntersectionObserver(handleLoading, options);
-      observer.observe(target);
-    }
-    return () => {
-      if(observer)
-      observer.disconnect();
-    };
-  }, [target])
+  //   let observer:any;
+  //   if(target) {
+  //     observer = new IntersectionObserver(handleLoading, options);
+  //     observer.observe(target);
+  //   }
+  //   return () => {
+  //     if(observer)
+  //     observer.disconnect();
+  //   };
+  // }, [target]);
 
   return (
     <View>
