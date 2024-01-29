@@ -98,7 +98,7 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
     <View>
       <Header />
       <Content res={res} />
-      <div ref={setTarget} className='target bg-red-500' style={{height:'1vh', width:'100vw'}} />
+      <div ref={setTarget} style={{height:'1vh', width:'100vw'}} />
       <Skeletons />
     </View>
   )
