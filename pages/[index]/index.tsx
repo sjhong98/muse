@@ -94,7 +94,7 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
       if(observer)
       observer.disconnect();
     };
-  }, [target]);
+  }, [target, router.query.index]);
 
   return (
     <View>
