@@ -30,7 +30,7 @@ export default function Content(props:contentProps) {
 
     return (
         <ContentComponent ref={outsideRef}>        
-            { res.length !== 0 && res.map((item:resType, index:number) => {
+            { res?.length !== 0 && res.map((item:resType, index:number) => {
             return (
                 item.primaryImageSmall !== "" ?
                     selected === index ?
