@@ -1,14 +1,13 @@
-import axios from 'axios';
-import { View, Skeletons } from '@/components/components';
-import Header from '../components/header';
-import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { resType } from '@/types/type';
-import { useRouter } from 'next/router';
-import Content from '../content';
-import { Axios } from '@/axios';
 import _ from 'lodash';
-
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
+import { Axios } from '@/axios';
+import Content from '../content';
+import { resType } from '@/types/type';
+import Header from '../components/header';
+import { View, Skeletons } from '@/components/components';
 
 export const getStaticPaths = async () => {
   let temp = [];
@@ -71,18 +70,27 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
   }, [router.query, initialData])
 
   useEffect(() => {
+    console.log("fetchIndex : ", fetchIndex);
+  }, [fetchIndex])
+
+  useEffect(() => {
+    console.log("res : ", res);
+  }, [res])
+
+  useEffect(() => {
     const handleLoading = ([entry]:any, observer:any) => {
       if(entry.isIntersecting && flag) {
         observer.unobserve(entry.target);
         // observe 해체
         Axios(fetchIndex, JSON.parse(router.query.index as string)).then((_res) => {
           setRes((prev)=>[...prev, ..._res]);
+          setFetchIndex((prev)=>prev+20);
           observer.observe(entry.target);
           // observer 재시작
         });
       }
       flag = true;
-      setFetchIndex((prev)=>prev+20);
+      
     }
 
     let observer:any;

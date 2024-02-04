@@ -1,9 +1,8 @@
 import axios from "axios";
 import { resType } from "./types/type";
-import { useRouter } from "next/router";
 
 export async function Axios(startIndex:number, category:number) {
-    console.log("category : ", category);
+    console.log("category, startIndex : ", category, startIndex);
     const response = await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=${category}`);
     const data = response.data.objectIDs;
     
@@ -29,4 +28,4 @@ export async function Axios(startIndex:number, category:number) {
         }
     }
     return items;
-}
+} 
