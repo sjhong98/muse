@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { Axios } from '@/axios';
 import Content from '../content';
@@ -72,6 +72,7 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
     }
 
     const handleLoading = ([entry]:any, observer:any) => {
+      // 원래는 이벤트핸들러 등록시 함수 실행되나, 아랫줄로 초기에는 실행되지 않도록 함.
       if(entry.isIntersecting) {
         observer.unobserve(entry.target);
         // observe 해체
@@ -93,6 +94,7 @@ export default function Home( { initialData } : InferGetStaticPropsType<GetStati
       if(observer)
       observer.disconnect();
     };
+    // FetchIndex를 의존성에 추가해도 handleLoading이 방어코드로 인해 연쇄동작하지 X
   }, [target, router.query.index, fetchIndex]);
 
   return (
